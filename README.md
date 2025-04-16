@@ -16,47 +16,73 @@ _Ensuring the security of application source code is a critical step in modern s
 </header>
 
 <!--
-  <<< Author notes: Step 1 >>>
-  Choose 3-5 steps for your course.
-  The first step is always the hardest, so pick something easy!
-  Link to docs.github.com for further explanations.
-  Encourage users to open new tabs for steps!
-  TBD-step-1-notes.
+  <<< Author notes: Step 4 >>>
+  Start this step by acknowledging the previous step.
+  Define terms and link to docs.github.com.
+  TBD-step-4-notes.
 -->
 
-## Step 1: Enable CodeQL
+## Step 4: Prevent Vulnerabilities in the Pull Request
 
-👋 Hello! Welcome to the GitHub Skills course: Enable code scanning! 
+_Nicely done! You finished Step 3: Fix Security Vulnerabilites! :partying_face:_
 
-Let's get started!  
-
-In this first step, we'll be learning more about CodeQL and how to use it to secure your source code. 
-
-**What is GitHub code scanning**: _[Code scanning](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning)_ is a capability that allows development teams to integrate security testing tools into the software development process. This is done using GitHub Actions. With code scanning, you can integrate many different types of tools including SAST, container, and infrastructure as code security tools.
-
-**What is CodeQL**: _[CodeQL](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql)_ is a static analysis testing tool that helps you identify security weaknesses such as SQL injection, cross-site scripting, and code injection issues.
-
-### :keyboard: Activity: Enable code scanning with CodeQL
+Way to go! You made it this far. We're almost done! The last step is to test out the pull request integration with CodeQL. In this step, we will add a vulnerability back into the `routes.py` file to trigger an alert for a SQL injection vulnerability. This is going to be the same issue we initially saw.  
   
-First, we will enable code scanning with CodeQL in our repository.
+Our goal is to understand what developers experience when they find a new vulnerability.  
 
-1. Open a new browser tab, and work on the steps in your second tab while you read the instructions in this tab.
-2. Navigate to the **Settings** tab at the top of your newly created repository.
-3. Under the **Security** section on the left side, select **Code security and analysis**.
-4. Scroll down to the section titled **Code scanning**. For the purpose of this course, we will focus on CodeQL analysis.
-5. Click on the **Set up** dropdown menu and choose **Default**.
-![enable-code-scanning-default.png](/images/enable-code-scanning-default.png)
-
-Let's take a look at the configuration options in the modal:
+In this step, we will:
+- edit the `routes.py` file.
+- change the SQL statement to make it insecure.
+- commit those changes and merge the insecure code into the main branch.
+- experience the alert inside the pull request.
   
-  - **Languages to analyze:** These are the languages that will be scanned by CodeQL. In this case, we will be scanning in `Python`.  
-  - **Query suites:** CodeQL [queries](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql#about-codeql-queries) are packaged in bundles called "suites". This section allows you to choose which query suite to use.  We'll leave this set as **Default** for this exercise. For more information, see "[About CodeQL queries](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/about-code-scanning-with-codeql#about-codeql-queries)." 
-  - **Events:** This section tells CodeQL when to scan. In this case, it's set to scan on any pull request to the `main` branch.
-    
-![codeql-default-configuration-box.png](/images/codeql-default-configuration-box.png)
+Let's get started 👍
 
-6. Click **Enable CodeQL**
-7. Wait about 20 seconds then refresh this page (the one you're following instructions from). [GitHub Actions](https://docs.github.com/en/actions) will automatically update to the next step.
+**What is pull request**: Pull requests are proposed changes to a repository submitted by a user and accepted or rejected by a repository's collaborators. This allows multiple people to work on the same code at the same time. For more information, check out the GitHub Skills course "[Introduction to GitHub](https://github.com/skills/introduction-to-github)" or "[About pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests)" from the GitHub docs.
+
+**What is branch**: A branch is a parallel version of your repository. By default, your repository has one branch named main and it is considered to be the definitive branch. Creating additional branches allows you to copy the main branch of your repository and safely make any changes without disrupting the main project. For more information, see "[About branches](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-branches#)" in the GitHub docs.
+
+### :keyboard: Activity 1: Edit `routes.py` and create a new pull request
+
+In this first activity, we'll introduce the same insecure SQL statement from before to the `routes.py` file. Once we update the file, we'll commit it to a new branch, then create a pull request.
+
+  1. Click the **Code** tab in your repository.
+  2. Select the `server` folder.
+  3. Select the `routes.py` file.
+  4. Click the **Edit** button to the right.
+
+![edit-button.png](/images/edit-button.png)
+  
+  5. Edit line 16 by highlighting the SQL statement and replace it with this text: `"SELECT * FROM books WHERE name LIKE '%" + name + "%'"`.
+  6. Click **Commit changes...** from the top right. The "Propose changes" window will pop up.
+  7. This time, select the radio button next to **Create a new branch**. You can create a new name for this branch or leave it as the default suggestion.
+  8. Click **Propose changes**. This opens a new pull request.
+  9. In the "Open a pull request" window, click **Create pull request**.
+  
+
+### :keyboard: Activity 2: Review pull request
+
+At this point, we've edited the file `routes.py` to add our vulnerable code, committed those changes to our new branch, and created a pull request to merge the new branch into our `main` branch. These are the same steps a developer would take to introduce new, vulnerable code into a repository. 
+  
+Now, let's take a look at the pull request to see what the experience is like.
+  
+1. In the previous activity, we created the pull request.  After creating the pull request, you were brought directly to the pull request page. At the bottom of the pull request, you will see a check called "Code scanning/CodeQL". This is the CodeQL analysis job scanning the code introduced in the pull request.
+
+![pr-panel](/images/pr-panel.png)
+
+2.  Once the check is complete, you will see a new comment in the pull request from CodeQL indicating a new security vulnerability; a SQL query built from user-controlled data. This is our SQL injection vulnerability.
+  
+  <img width="1180" alt="image" src="https://github.com/leftrightleft/enable-code-scanning/assets/4910518/378bd766-ef61-4619-ab3c-bf2c8d9618d7">
+
+3. Review the data flow paths by clicking **Show paths**.
+  
+4. If you would like, add a comment and tag one of your friends by using their GitHub handle (example: `@username`). This will notify them that you made a comment on the issue and need their help solving the problem. 😄
+
+If this were a real-world situation, the developer would fix the SQL statement in their branch. Once fixed, the vulnerability will automatically close out.
+
+If you would like to learn more about pull request integrations for code scanning, see "[Triaging code scanning alerts in pull requests](https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/triaging-code-scanning-alerts-in-pull-requests)."
+
+5. Wait about 20 seconds then refresh this page (the one you're following instructions from). [GitHub Actions](https://docs.github.com/en/actions) will automatically update to the next step.
 
 <footer>
 
